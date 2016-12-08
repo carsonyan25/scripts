@@ -1,7 +1,7 @@
 #!/bin/bash
 #support OS: centos-7.0
 #created by carson 2016-8-24
-#this souce lamp contains  apache 2.4.23 , php 5.4.3 and mysql.5.7.13
+#this souce lamp contains  apache 2.4.23 , php 5.4.3 and mysql.5.6.33
 # download all source package from official website 
 # all source package place in /app/software/package ,unzip to /app/software
 # all source package  install to /app
@@ -98,8 +98,8 @@ useradd -U -c "MySQL Server user" -M -s /sbin/nologin mysql
 #configure and install mysql
 #use cmake . -LAH( show all options and help)
 
-cd mysql-5.7.13
-cmake . -DCMAKE_INSTALL_PREFIX=/app/mysql5 -DMYSQL_DATADIR=/app/mysql5/data -DWITH_BOOST=/app/software/mysql-5.7.13/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
+cd mysql-5.6.33
+cmake . -DCMAKE_INSTALL_PREFIX=/app/mysql5 -DMYSQL_DATADIR=/app/mysql5/data -DWITH_BOOST=/app/software/mysql-5.6.33/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
 
 if [ $? -ne 0 ]  ;  then
      {
@@ -247,7 +247,7 @@ install_lamp(){
     install_php
     if [ $? -eq 0 ] ; then 
         echo "install LAMP successfully! \n" 
-        echo "source package LAMP(apache-2.4.23 ,mysql-boost-5.7.13 and php-5.4.3) has been installed to /app \n"
+        echo "source package LAMP(apache-2.4.23 ,mysql-boost-5.6.33 and php-5.4.3) has been installed to /app \n"
 		echo "you need to initialize mysql manully ! \n"
     else 
         echo "install lamp error"
