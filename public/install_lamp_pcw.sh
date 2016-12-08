@@ -235,8 +235,8 @@ install_apache(){
 #install dependencies
 # download package apr and apr-util from apache.org
 cd /app/software/package
-tar --transform s/apr-util-1.5.4/apr-util/ -C ../httpd-2.4.23/srclib/ -zxf apr-util-1.5.4.tar.gz
-tar --transform s/apr-1.5.2/apr/ -C ../httpd-2.4.23/srclib/ -zxf apr-1.5.2.tar.gz
+tar --transform s/apr-util-1.5.4/apr-util/ -C ../httpd-2.2.25/srclib/ -zxf apr-util-1.5.4.tar.gz
+tar --transform s/apr-1.5.2/apr/ -C ../httpd-2.2.25/srclib/ -zxf apr-1.5.2.tar.gz
 
 
 #configure and install apache
