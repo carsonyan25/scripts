@@ -4,7 +4,7 @@
 import commands
 import sys
 
-class git_management(self.op):
+class git_management():
 	
 	def __init__(self):
 		pass
@@ -26,7 +26,7 @@ do_git=git_management()
 if operation=="pull":	
 	output=do_git.pull(sys.argv[2])
 elif operation=="get_log":
-	output=do_git.pull(sys.argv[2])
+	output=do_git.get_log(sys.argv[2])
 elif operation=="rollback":
 	output=do_git.rollbackup(sys.argv[2],sys.argv[3])
 else :
