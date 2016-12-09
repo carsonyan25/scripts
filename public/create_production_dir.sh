@@ -7,8 +7,9 @@ dir=$1
 # the directory(path)  exists or not ?
 if [ ! -d "$dir" ] ; then
 	mkdir -p $dir
+	echo "$dir has been created"
 else
-	echo "$dir is exists ! \n"
+	echo "$dir is exists !"
 
 fi
  
