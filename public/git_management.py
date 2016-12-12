@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #code:utf8
+#created by carson
 
 import commands
 import sys
@@ -15,22 +16,22 @@ class git_management():
 		result=commands.getoutput(" cd {directory} && git log " .format(directory=path))
 		return result	    # define git reset --hard HEADnumber	
 	def rollback(self,path,head):
-		result=commands.getoutput(" cd {directory} && git reset --hard {headname} " .format(directory=path,headname=head))
+		result=commands.getoutput(" cd {directory} && git reset --hard {headnumber} " .format(directory=path,headnumber=head))
 		return result
 
 
 
 # whate function does the user want to use ?
-operation=sys.argv[1]
+operation=str(sys.argv[1])
 do_git=git_management()
+output="no operation\n"
 if operation=="pull":	
 	output=do_git.pull(sys.argv[2])
 elif operation=="get_log":
 	output=do_git.get_log(sys.argv[2])
 elif operation=="rollback":
-	output=do_git.rollbackup(sys.argv[2],sys.argv[3])
+	output=do_git.rollback(sys.argv[2],sys.argv[3])
 else :
 	pass
-print output
-	
+print output	
 	 
