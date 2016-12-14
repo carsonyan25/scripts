@@ -35,8 +35,8 @@ db_full_backup()
 db_different_backup()
 	{
 		echo "$$" >  /root/shell/remote_backup/pid/db_different_backup_pid
-		while true
-		do
+#		while true
+#		do
 		CUR_DATE=`date +%Y%m%d`
 		local	CUR_TIME=`date +%Y%m%d_%H%M`
 								#delete db different files  before 7days
@@ -45,8 +45,8 @@ db_different_backup()
 								#compress db binlog files within today
 		find ./ -name "mysql-bin*" -type f -mtime -$BINLOG_DAYS | xargs tar -czf $SRC_DB_DIFFERENT/pcw_binlog_bak_${CUR_TIME}.tar.gz 
 		db_different_sync 				 # call function ,send binlog to aliyun slave 
-		sleep ${SYNC_DEFFERENT_INTERVAL}		# run db different task every 10 mins
-		done
+#		sleep ${SYNC_DEFFERENT_INTERVAL}		# run db different task every 10 mins
+#		done
 	}
 
 # this function use to copy db_full_backup file to aliyun slave

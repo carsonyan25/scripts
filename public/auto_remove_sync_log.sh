@@ -1,5 +1,5 @@
 #!/bin/bash
-# auto remove and create log file for sync script  (with aliyun slave)
+# auto remove backup log file which created by  sync script  (web_sync_to_slave.sh and db_sync_to_slave.sh)
 
 
 cd /root/shell/logs
