@@ -46,12 +46,10 @@ db_vipapps_full_backup(){
 db_other_full_backup(){
 	
 	#delete other database backup files 2 days ago	
-	find $SRC_DB_FULL -name "cad-other-*" -type f -mtime +$OTHER_KEEP  -exec rm -f {} \;
-
+	find $SRC_DB_FULL -name "cad-other-*" -type f -mtime +$OTHER_KEEP  -exec rm -f '{}' \;
 	#delete aec database backup 2 days ago
-	find $SRC_DB_AEC -name "cad-aec-big-table-*"  -type f -mtime +$OTHER_KEEP  -exec rm -f {} \;
-
-		# table which size more than 1GB in database aec
+	find $SRC_DB_AEC -name "cad-aec-big-table-*"  -type f -mtime +$OTHER_KEEP  -exec rm -f '{}'  \;
+#		# table which size more than 1GB in database aec
 	aec_big_table=(usercount_1_150824 usercount_1_160926 usercount_1 usercount_1_device usercount usercount_last)
 	exclude_table=(aec.usercount_1_150824 aec.usercount_1_160926 aec.usercount_1 aec.usercount_1_device aec.usercount aec.usercount_last)
 	ignore_big_table=""
@@ -63,10 +61,10 @@ db_other_full_backup(){
 	# export other databases ,without vipapps and aec big table data,mysql,informations_schema
 	mysql -uroot -pIAGo1oy-881Nt2K\\  -e "show databases;" | grep -Ev "Database|information_schema|mysql" | xargs mysqldump -uroot -pIAGo1oy-881Nt2K\\  -F -l --add-drop-database --databases  ${ignore_big_table} > $SRC_DB_FULL/cad-other-without-big-table-${CUR_DATE}.sql
 	
-	 export aec big tables form
+#	 export aec big tables form
 	mysqldump -uroot -pIAGo1oy-881Nt2K\\  -d aec ${aec_big_table[*]}  >  $SRC_DB_AEC/aec_big_table-${CUR_DATE}.form   
 	
-	export aec big tables data
+#	export aec big tables data
 	for table in ${aec_big_table[*]};
 		do
 			mysql -uroot -pIAGo1oy-881Nt2K\\ -e " use aec; lock tables ${table} read ; select * from ${table} into outfile '$SRC_DB_AEC/${table}-${CUR_DATE}.data' fields terminated by ',' ; unlock tables; "
