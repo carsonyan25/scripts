@@ -8,9 +8,10 @@ import sys
 class nodejs():
 	
 	def __init__(self):
+		self.BINPATH="/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/root/.nvm/versions/node/v6.5.0/bin"
 		pass
 	def PullandGrunt(self,path):  # define git pull function
-		result=commands.getoutput(" cd {directory} && git pull && grunt " .format(directory=path))
+		result=commands.getoutput(" cd {directory} && git pull && export PATH={BINPATH} && grunt " .format(directory=path,BINPATH=self.BINPATH))
 		return result
 
 
