@@ -1,6 +1,6 @@
 #!/bin/bash
 #created by carson
-#renew ssl certificate  automatically (signed to let's encry )
+#renew ssl certificate  automatically (signed to let's encrypt )
 
 case $1 in 
 	apache)
@@ -8,8 +8,8 @@ case $1 in
 		service apache restart
 		;;
 	nginx)
-		service nginx stop 
-		certbot renew --quiet
+		service nginx quit 
+		certbot renew 
 		service nginx start 
 		;;
 	*)
