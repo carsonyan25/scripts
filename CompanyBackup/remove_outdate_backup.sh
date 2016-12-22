@@ -17,9 +17,6 @@ remove_pcw_backup()
                 find ./  -name ".gz"  -mtime +${PCW_DB_EXPIRE}  -exec  rm -f '{}' \;
                 cd $PCW_WEB_DIR
                 tar -czf  pcw-web-${curdate}.tar.gz ecshop
-                mv *.gz ecshop-bak/
-                cd ecshop-bak
-                find ./  -name "pcw-web*.gz"  -mtime +${WEB_EXPIRE}  -exec  rm -f '{}' \;
         }
 
 
