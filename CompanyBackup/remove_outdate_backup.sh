@@ -14,8 +14,9 @@ remove_pcw_backup()
         {
                 curdate=`date +%Y%m%d`
                 cd $PCW_DB_DIR
-                find ./  -name ".gz"  -mtime +${PCW_DB_EXPIRE}  -exec  rm -f '{}' \;
+                find ./  -name "*.gz"  -mtime +${PCW_DB_EXPIRE}  -exec  rm -f '{}' \;
                 cd $PCW_WEB_DIR
+                find ./  -name "*.gz"  -mtime +${WEB_EXPIRE}  -exec  rm -f '{}' \;
                 tar -czf  pcw-web-${curdate}.tar.gz ecshop
         }
 
