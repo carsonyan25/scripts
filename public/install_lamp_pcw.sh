@@ -317,7 +317,7 @@ install_lamp(){
     install_php
     if [ $? -eq 0 ] ; then 
         echo "install LAMP successfully! \n" 
-        echo "source package LAMP(apache-2.2.25 ,mysql-5.1.73 and php-5.4.3) has been installed to /app \n"
+        echo "source package LAMP(apache-2.2.25 ,mysql-5.1.73 and php-5.4.3) has been installed to /home/server \n"
 		echo "you need to initialize mysql manully ! \n"
     else 
         echo "install lamp error"
