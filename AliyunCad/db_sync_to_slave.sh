@@ -39,7 +39,7 @@ db_full_backup(){
 db_vipapps_full_backup(){	
 		#delete vipapps full backup files before 21days  
 	find $SRC_DB_FULL -name "cad-vipapps-*" -type f -mtime +$vipapps_keep  -exec rm -f '{}' \;
-	mysqldump  -uroot -pIAGo1oy-881Nt2K\\  --master-data=2 --flush-logs -x --add-drop-database --databases vipapps  > ${SRC_DB_FULL}/cad-vipapps-${CUR_DATE}.sql
+	mysqldump  -uroot -pIAGo1oy-881Nt2K\\  --master-data=2 --flush-logs -x  --databases vipapps  > ${SRC_DB_FULL}/cad-vipapps-${CUR_DATE}.sql
 }
 
 #function do other database backup
@@ -50,8 +50,8 @@ db_other_full_backup(){
 	#delete aec database backup 2 days ago
 	find $SRC_DB_AEC -name "cad-aec-big-table-*"  -type f -mtime +$OTHER_KEEP  -exec rm -f '{}'  \;
 #		# table which size more than 1GB in database aec
-	aec_big_table=(usercount_1_150824 usercount_1_160926 usercount_1 usercount_1_device usercount usercount_last)
-	exclude_table=(aec.usercount_1_150824 aec.usercount_1_160926 aec.usercount_1 aec.usercount_1_device aec.usercount aec.usercount_last)
+	aec_big_table=(usercount_1_150824 usercount_1_170118 usercount_1 usercount_1_device usercount usercount_last)
+	exclude_table=(aec.usercount_1_150824 aec.usercount_1_170118 aec.usercount_1 aec.usercount_1_device aec.usercount aec.usercount_last)
 	ignore_big_table=""
 	for table in ${exclude_table[*]} ;
 		do
@@ -59,7 +59,7 @@ db_other_full_backup(){
 		done
 		
 	# export other databases ,without vipapps and aec big table data,mysql,informations_schema
-	mysql -uroot -pIAGo1oy-881Nt2K\\  -e "show databases;" | grep -Ev "Database|information_schema|mysql" | xargs mysqldump -uroot -pIAGo1oy-881Nt2K\\  -F -l --add-drop-database --databases  ${ignore_big_table} > $SRC_DB_FULL/cad-other-without-big-table-${CUR_DATE}.sql
+	mysql -uroot -pIAGo1oy-881Nt2K\\  -e "show databases;" | grep -Ev "Database|information_schema|mysql|vipapps" | xargs mysqldump -uroot -pIAGo1oy-881Nt2K\\  -F -l  --databases  ${ignore_big_table} > $SRC_DB_FULL/cad-other-without-big-table-${CUR_DATE}.sql
 	
 #	 export aec big tables form
 	mysqldump -uroot -pIAGo1oy-881Nt2K\\  -d aec ${aec_big_table[*]}  >  $SRC_DB_AEC/aec_big_table-${CUR_DATE}.form   

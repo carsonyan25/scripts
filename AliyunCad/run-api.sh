@@ -3,7 +3,7 @@
 # created by carson
 
 # everyday money  count
-curl -i http://app.aec188.com/admin/insdata?key=268pcw
+curl -G -d key=268pcw -i http://app.aec188.com/admin/insdata
 
 #everyday download count
 curl -i http://app.aec188.com/admin/get_orders_datas/key/268pcw
