@@ -4,17 +4,20 @@
 PCW_WEB_DIR=/backup/www_pcw365_backup/webfiles
 PCW_DB_DIR=/backup/www_pcw365_backup/databases
 CAD_DB_DIR=/backup/cad_pcw365_backup/database
+MOBILE_DB_DIR=/backup/m_pcw365_backup
 WEB_EXPIRE=5			#pcw web backups keep days
 FULL_DB_EXPIRE=7		#full db backups keep days
 DIFFERENT_DB_EXPIRE=7		#db different backups keep days
 PCW_WEB_LOGFILE=/root/shell/logs/pcw_web.log
 PCW_DB_LOGFILE=/root/shell/logs/pcw_db.log
 CAD_DB_LOGFILE=/root/shell/logs/cad_db.log
+MOBILE_DB_LOGFILE=/root/shell/logs/MOBILE_DB.log
 PASS=/backup/passfile/backup2company.pass
 USER=backup-company
 COMPANY_SERVER=140.206.131.250
 PCW_DST=backup-pcw
 CAD_DST=backup-cad
+MOBILE_DST=backup-mobile
 
 
 sync_pcw_web(){
@@ -54,6 +57,16 @@ echo "$$" >  /root/shell/pid/sync_cad_db_pid
 	}
 
 
+sync_mobile_db()
+	{
+	
+	echo "$$" > /root/shell/pid/sync_mobile_pid
+	find ${MOBILE_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f {} \;
+	curtime=`date +%Y%m%d-%H%m`
+	cd ${MOBILE_DB_DIR} 
+	tar -zcf  mongodb-${curtime}.tar.gz mongodb
+	rsync -avpP --quiet --bwlimit=500 --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --exclude=mongodb --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
+}
 
 compress_pcw_web_files(){
 
@@ -120,7 +133,19 @@ case $1 in
                                 sync_cad_db
                                 ;;
                         *)
-                                echo "second parameter should be web|db"
+                                echo "second parameter should be db"
+                                ;;
+                esac
+        ;;
+
+	 "mobile")
+
+                case $2 in
+                        "db")
+                                sync_mobile_db
+                                ;;
+                        *)
+                                echo "second parameter should be db"
                                 ;;
                 esac
         ;;
