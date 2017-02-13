@@ -4,7 +4,7 @@
 PCW_WEB_DIR=/backup/www_pcw365_backup/webfiles
 PCW_DB_DIR=/backup/www_pcw365_backup/databases
 CAD_DB_DIR=/backup/cad_pcw365_backup/database
-MOBILE_DB_DIR=/backup/m_pcw365_backup
+MOBILE_DB_DIR=/backup/m_pcw365_backup/database
 WEB_EXPIRE=5			#pcw web backups keep days
 FULL_DB_EXPIRE=7		#full db backups keep days
 DIFFERENT_DB_EXPIRE=7		#db different backups keep days
@@ -64,8 +64,8 @@ sync_mobile_db()
 	find ${MOBILE_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f {} \;
 	curtime=`date +%Y%m%d-%H%m`
 	cd ${MOBILE_DB_DIR} 
-	tar -zcf  mongodb-${curtime}.tar.gz mongodb
-	rsync -avpP --quiet --bwlimit=500 --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --exclude=mongodb --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
+	tar -zcf mongodb-${curtime}.tar.gz  ../mongodb
+	rsync -avpP --quiet --bwlimit=500 --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
 }
 
 compress_pcw_web_files(){

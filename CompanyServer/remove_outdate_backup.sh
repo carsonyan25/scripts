@@ -5,10 +5,12 @@
 PCW_WEB_DIR=/backup/www_pcw365_com/webfiles
 PCW_DB_DIR=/backup/www_pcw365_com/databases
 CAD_DB_DIR=/backup/cad_pcw365_com/database
+MOBILE_DB_DIR=/backup/m_pcw365_com
 WEB_EXPIRE=4
 PCW_DB_EXPIRE=30
 CAD_DB_EXPIRE=7
 CAD_VIPAPPS_EXPIRE=30
+MOBILE_DB_EXPIRE=30
 
 remove_pcw_backup()
         {
@@ -32,9 +34,15 @@ remove_cad_backup()
 
         }
 
+remove_mobile_backup()
+	{
+		cd $MOBILE_DB_DIR
+		find ./ -name "*.gz"	-mtime +${MOBILE_DB_EXPIRE} -exec rm -f '{}' \;
+	}
+
 
 
 
 remove_pcw_backup
 remove_cad_backup
-
+remove_mobile_backup
