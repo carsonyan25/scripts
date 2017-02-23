@@ -14,22 +14,23 @@ CAD_DB_LOGFILE=/root/shell/logs/cad_db.log
 MOBILE_DB_LOGFILE=/root/shell/logs/MOBILE_DB.log
 PASS=/backup/passfile/backup2company.pass
 USER=backup-company
-COMPANY_SERVER=140.206.131.250
+COMPANY_SERVER=27.115.112.238
 PCW_DST=backup-pcw
 CAD_DST=backup-cad
 MOBILE_DST=backup-mobile
+SPEED=2048
 
 
 sync_pcw_web(){
 
-echo "$$" >  /root/shell/pid/sync_pcw_web_pid   # save  running pid to  file which is use for stop script
-# delete pcw web backup created 3days  ago
-find  ${PCW_WEB_DIR}  -name "pcw-web*.gz" -mtime  +${WEB_EXPIRE} -exec rm -f '{}' \;
-CUR_DATE=`date +%Y%m%d`
-if [ ! -f ${PCW_WEB_DIR}/pcw-web-${CUR_DATE}.tar.gz ] ; then
-	compress_pcw_web_files  # compress pcw web files
-fi
-rsync -avpP --quiet --bwlimit=500  --delete  --log-file=$PCW_WEB_LOGFILE --exclude=pcw-web*.gz --password-file=${PASS} $PCW_WEB_DIR  $USER@$COMPANY_SERVER::$PCW_DST
+	echo "$$" >  /root/shell/pid/sync_pcw_web_pid   # save  running pid to  file which is use for stop script
+	# delete pcw web backup created 3days  ago
+	find  ${PCW_WEB_DIR}  -name "pcw-web*.gz" -mtime  +${WEB_EXPIRE} -exec rm -f '{}' \;
+	CUR_DATE=`date +%Y%m%d`
+	if [ ! -f ${PCW_WEB_DIR}/pcw-web-${CUR_DATE}.tar.gz ] ; then
+		compress_pcw_web_files  # compress pcw web files
+	fi
+	rsync -avpP --quiet --bwlimit=${SPEED}  --delete  --log-file=$PCW_WEB_LOGFILE --exclude=pcw-web*.gz --password-file=${PASS} $PCW_WEB_DIR  $USER@$COMPANY_SERVER::$PCW_DST
 
 }
 
@@ -42,7 +43,7 @@ echo "$$" >  /root/shell/pid/sync_pcw_db_pid
 		#delete pcw full and different db backup created 7days ago
 		find ${PCW_DB_DIR}/fullbackup  -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f {} \;
 		find ${PCW_DB_DIR}/different_backup  -name "*.gz" -mtime +${DIFFERENT_DB_EXPIRE} -exec  rm -f {} \;
-		rsync -avpP --quiet --bwlimit=500 --log-file=$PCW_DB_LOGFILE --password-file=${PASS} $PCW_DB_DIR  $USER@$COMPANY_SERVER::$PCW_DST
+		rsync -avpP --quiet --bwlimit=${SPEED} --log-file=$PCW_DB_LOGFILE --password-file=${PASS} $PCW_DB_DIR  $USER@$COMPANY_SERVER::$PCW_DST
 	}
 
 
@@ -53,7 +54,7 @@ echo "$$" >  /root/shell/pid/sync_cad_db_pid
 		#delete cad full and different  db backup created 7days ago
 		find ${CAD_DB_DIR}/fullbackup  -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f {} \;
 		find ${CAD_DB_DIR}/different_backup  -name "*.gz" -mtime +${DIFFERENT_DB_EXPIRE} -exec  rm -f {} \;
-		rsync -avpP --quiet --bwlimit=500  --exclude=.* --exclude=oracle --log-file=$CAD_DB_LOGFILE --password-file=${PASS} $CAD_DB_DIR  $USER@$COMPANY_SERVER::$CAD_DST
+		rsync -avpP --quiet --bwlimit=${SPEED}  --exclude=.* --exclude=oracle --log-file=$CAD_DB_LOGFILE --password-file=${PASS} $CAD_DB_DIR  $USER@$COMPANY_SERVER::$CAD_DST
 	}
 
 
@@ -65,7 +66,7 @@ sync_mobile_db()
 	curtime=`date +%Y%m%d-%H%m`
 	cd ${MOBILE_DB_DIR} 
 	tar -zcf mongodb-${curtime}.tar.gz  ../mongodb
-	rsync -avpP --quiet --bwlimit=500 --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
+	rsync -avpP --quiet --bwlimit=${SPEED} --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
 }
 
 compress_pcw_web_files(){
