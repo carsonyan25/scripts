@@ -20,7 +20,7 @@ backup(){
 
 compress(){
         cd $dest
-        find ./ -name "*${curdate}*" | xargs tar -czf stats-${curdate}.tar.gz \;
+        find ./ -name "*${curdate}.sql" | xargs tar -czf stats-${curdate}.tar.gz \;
         rm -f *.sql
 }
 
