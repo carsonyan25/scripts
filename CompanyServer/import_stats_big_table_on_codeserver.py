@@ -1,20 +1,25 @@
 #!/usr/bin/python
-#created by carson
-#use to import backup data to stats big table on code server
+#created by carson 
+# used to copy aec database backup to code server from backup server
 
-
-import MySQLdb
+import commands
 import time
+import MySQLdb
 import sys
-import commmands
+
 
 TIMEFMT="%Y%m%d"
-curdate=time.stftime(TIMEFMT,time.localtime())
+curdate=time.strftime(TIMEFMT,time.localtime())
 aec_file="cad-aec-big-table-{DATE}.tar.gz".format(DATE=curdate)
-dest_file="usercount_1_170118-{DATE}.data".format(DATE=curdate))
+dest_file="usercount_1_170118-{DATE}.data".format(DATE=curdate)
+
+def copy_file():
+	src="backup-company@backup.pcw365.com::backup-cad/database/fullbackup/cad-aec-big-table-{DATE}.tar.gz".format(DATE=curdate)
+	result=commands.getstatusoutput("rsync -avpP --quiet --password-file=/root/shell/backup_server.pass  {SRC} /tmp".format(SRC=src))
+	print result	
 
 def uncompress():
-	commands.getoutput("cd /tmp && tar -xf {SRC} {DEST}".format(SRC=aec_file,DEST=dest_file))
+        commands.getoutput("cd /tmp && tar -xf {SRC}".format(SRC=aec_file))
 
 def import_stats(curfile,table):
         con=MySQLdb.connect(host='localhost',user='root',passwd='f5x/pdWUtDgAyz5R',db='stats',read_default_file='/etc/my.cnf')
@@ -27,7 +32,14 @@ def import_stats(curfile,table):
         logfile.close()
         db_op.close()
 
+def remove():
+	result=commands.getstatusoutput("cd /tmp && rm -f cad-*.tar.gz usercoun*.data aec*.form")
+	print result
+	
+
+copy_file()
 uncompress()
-import_stats(curfile="/tmp" + dest_file,table="usercount_1_170118")		
+import_stats(curfile="/tmp/" + dest_file,table="usercount_1_170118")
+remove()
 
 
