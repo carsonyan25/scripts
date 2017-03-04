@@ -19,7 +19,7 @@ make_backups(){
 	/usr/bin/gitlab-rake gitlab:backup:create
 	cd $gitlab_src
 	gitlab_backup=`ls -r |head -n 1`
-	gitlab_new_backup=$gitlab_backup-$curdate
+	gitlab_new_backup=${gitlab_backup}-${curdate}
 	mv $gitlab_backup $gitlab_new_backup
 }
 
