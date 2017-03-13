@@ -13,7 +13,6 @@ class exec_api:
 	def budgetXML(self):	# generate xml file from database budget on www.pcw365.com
 		c = pycurl.Curl()
 		c.setopt(c.URL, 'http://www.pcw365.com/ecshop2/Payadmin/index.php?g=api&m=Budget&a=saveXmlDate') # use GET method to pass parameters
-		#c.setopt(c.POSTFIELDS, 'g=api&m=Budget&a=saveXmlDate') # when use POST method to pass the arguments to url
 		c.setopt(c.VERBOSE, True)
 		c.perform()
 

@@ -18,7 +18,7 @@ COMPANY_SERVER=27.115.112.238
 PCW_DST=backup-pcw
 CAD_DST=backup-cad
 MOBILE_DST=backup-mobile
-SPEED=2048
+SPEED=5000
 
 
 sync_pcw_web(){

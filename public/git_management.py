@@ -22,16 +22,17 @@ class git_management():
 
 
 # whate function does the user want to use ?
-operation=str(sys.argv[1])
-do_git=git_management()
-output="no operation\n"
-if operation=="pull":	
-	output=do_git.pull(sys.argv[2])
-elif operation=="get_log":
-	output=do_git.get_log(sys.argv[2])
-elif operation=="rollback":
-	output=do_git.rollback(sys.argv[2],sys.argv[3])
-else :
-	pass
-print output	
-	 
+if __name__ == '__main__' :
+	operation=str(sys.argv[1])
+	do_git=git_management()
+	output="no operation\n"
+	if operation=="pull":	
+		output=do_git.pull(sys.argv[2])
+	elif operation=="get_log":
+		output=do_git.get_log(sys.argv[2])
+	elif operation=="rollback":
+		output=do_git.rollback(sys.argv[2],sys.argv[3])
+	else :
+		pass
+	print output	
+			 

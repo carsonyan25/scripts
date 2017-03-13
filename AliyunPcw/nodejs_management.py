@@ -16,13 +16,16 @@ class nodejs():
 
 
 
-# whate function does the user want to use ?
-operation=str(sys.argv[1])
-job=nodejs()
-output="no operation\n"
-if operation=="PullandGrunt":	
-	output=job.PullandGrunt(sys.argv[2])
+# what function does the user want to use ?
+if  __name__ == '__main__'  :
+	operation=str(sys.argv[1])
+	job=nodejs()
+	output="no operation\n"
+	if operation=="PullandGrunt":	
+		output=job.PullandGrunt(sys.argv[2])
+	else :
+		pass
+		print output	
 else :
 	pass
-print output	
-	 
+			

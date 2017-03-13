@@ -10,8 +10,13 @@ aliyuntest_pass=/root/shell/aliyuntest.pass
 company_pass=/root/shell/backup-company.pass
 logfile=/root/shell/logs/rsync_gitlab_backup_to_aliyunslave_and_company.log
 curdate=`date +%Y%m%d`
-gitlab_setting_file=/tmp/gitlab-${curdate}.tar.gz
+gitlab_setting_file=/tmp/gitlab-setting-${curdate}.tar.gz
 gitlab_new_backup=empty
+
+check_logfile(){
+	find $logfile -mtime +6 -exec rm -f '{}' \;
+	touch $logfile
+}
 
 make_backups(){
 	cd /etc/
@@ -34,5 +39,6 @@ rsync_backups(){
 	rm -f $gitlab_new_backup
 }
 
+check_logfile
 make_backups
 rsync_backups
