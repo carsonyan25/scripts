@@ -31,10 +31,7 @@ class mysql_operation:
 
 if __name__ == '__main__' :
 	alist=[sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5]]
-	last=len(sys.argv)
-	dblist=[]
-	for i in range(6,last) :
-		dblist.append(sys.argv[i])
+	dblist=sys.argv[6:]
 	op1=mysql_operation(arglist=alist,db=dblist)
 	op1.create_user()
 	op1.grant_privileges()
