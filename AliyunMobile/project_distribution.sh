@@ -4,7 +4,7 @@
 
 
 PROJECT_DIR=/data/projects/${1}
-name=$1
+name=$1-deploy
 
 pull_code(){
 	cd $PROJECT_DIR 
