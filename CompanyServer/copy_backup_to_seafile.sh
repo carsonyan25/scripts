@@ -13,7 +13,7 @@ SEAFILE_DIR=/backup/backup_to_seafile
 curdate=`date +%Y%m%d`
 
 cd ${SEAFILE_DIR}
-find ./ -name "*.gz"  -exec rm -f '{}' \;
+find ./  -regextype 'posix-egrep' -iregex '(.*gz$|.*gitlab.*)'    -exec rm -f '{}' \;
 find ${PCW_DB_DIR} -name "*.gz" -mtime 0 -exec  cp '{}' ${SEAFILE_DIR} \; 
 find ${CAD_DB_DIR} -name "*.gz" -mtime 0 -exec  cp '{}' ${SEAFILE_DIR} \;
 find ${MOBILE_DB_DIR} -name "*.gz" -mtime 0 -exec cp '{}'  ${SEAFILE_DIR} \;
