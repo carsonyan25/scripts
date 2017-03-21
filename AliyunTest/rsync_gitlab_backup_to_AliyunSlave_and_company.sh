@@ -11,10 +11,11 @@ company_pass=/root/shell/backup-company.pass
 logfile=/root/shell/logs/rsync_gitlab_backup_to_aliyunslave_and_company.log
 curdate=`date +%Y%m%d`
 gitlab_setting_file=/tmp/gitlab-setting-${curdate}.tar.gz
-gitlab_new_backup=empty
+log_days=6
+keepdays=2
 
 check_logfile(){
-	find $logfile -mtime +6 -exec rm -f '{}' \;
+	find $logfile -mtime +${log_days} -exec rm -f '{}' \;
 	touch $logfile
 }
 
@@ -23,9 +24,7 @@ make_backups(){
 	tar -czf ${gitlab_setting_file}  gitlab
 	/usr/bin/gitlab-rake gitlab:backup:create
 	cd $gitlab_src
-	gitlab_backup=`ls -r |head -n 1`
-	gitlab_new_backup=${gitlab_backup}-${curdate}
-	mv $gitlab_backup $gitlab_new_backup
+	gitlab_new_backup=`ls -r *.tar |head -n 1`
 }
 
 rsync_backups(){
@@ -36,7 +35,7 @@ rsync_backups(){
 	cd $gitlab_src
 	rsync -avpP --quiet --bwlimit=5000 --log-file=${logfile} --password-file=${aliyuntest_pass}	${gitlab_new_backup} $aliyunslave
 	rsync -avpP --quiet --bwlimit=5000 --log-file=${logfile} --password-file=${company_pass}	${gitlab_new_backup} $company
-	rm -f $gitlab_new_backup
+	find ./ -name "*.tar" -mtime +${keepdays}  -exec rm -f '{}' \; 
 }
 
 check_logfile

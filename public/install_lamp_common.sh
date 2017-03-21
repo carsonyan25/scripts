@@ -1,14 +1,14 @@
 #!/bin/bash
 #support OS: centos-7.0
 #created by carson 2016-8-24
-#this souce lamp contains  apache 2.4.23 , php 5.4.3 and mysql.5.6.33
+#this souce lamp contains  apache 2.4.23 , php 5.4.3 and mysql.5.7.13
 # download all source package from official website 
 # all source package place in /app/software/package ,unzip to /app/software
 # all source package  install to /app
 
 prepare_install(){
 
-yum install -y  libmcrypt libmcrypt-devel libtool  libtool-ltdl libtool-ltdl-devel libxml2-devel  openssl openssl-devel bzip2-devel  libcurl-devel enchant enchant-devel enchant-aspell  libXpm-devel gmp-devel uw-imap-devel libicu-devel  libtidy-devel  openldap-devel   unixODBC-devel libpqxx-devel php-pspell libedit-devel recode-devel net-snmp-devel net-snmp-libs net-snmp libxslt-devel  zlib  ncurses-devel bison make gcc gc++ cmake
+yum install -y  libmcrypt libmcrypt-devel libtool  libtool-ltdl libtool-ltdl-devel libxml2-devel  openssl openssl-devel bzip2-devel  libcurl-devel enchant enchant-devel enchant-aspell  libXpm-devel gmp-devel uw-imap-devel libicu-devel  libtidy-devel  openldap-devel   unixODBC-devel libpqxx-devel php-pspell libedit-devel recode-devel net-snmp-devel net-snmp-libs net-snmp libxslt-devel  zlib  ncurses-devel bison make gcc gcc-c++ cmake zlib-devel sysstat lrzsz libjpeg-devel libpng-devel freetype-devel 
 
 lamp_result=""
 #check if its apache ,mysql,php running
@@ -26,10 +26,10 @@ rpm -qa | grep -i -E "apache|httpd|mysql|php" | xargs yum remove   -y
 # begin lamp install
 
 #unzip source packages
-cd /app/software/package
+cd /app/software/package/lamp-common
 for src_pkg in `ls *.tar.gz `  ;
      do
-          tar -xzf $src_pkg  -C ../
+          tar -xzf $src_pkg  -C /app/software
 done
 if  [ $? -ne 0 ] ; then
         {
@@ -68,7 +68,7 @@ cd $src_dir
 
 #install libxml2
 cd /app/software/
-pkg_name="libxml2"
+pkg_name="libxml"
 src_dir=`ls -d ${pkg_name}*`
 cd $src_dir
 ./configure   --with-iconv   --prefix=/app/libxml2 && make &&　make install 
@@ -97,9 +97,10 @@ useradd -U -c "MySQL Server user" -M -s /sbin/nologin mysql
 
 #configure and install mysql
 #use cmake . -LAH( show all options and help)
-
-cd mysql-5.6.33
-cmake . -DCMAKE_INSTALL_PREFIX=/app/mysql5 -DMYSQL_DATADIR=/app/mysql5/data -DWITH_BOOST=/app/software/mysql-5.6.33/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
+cd /app/software/ 
+mysql_dir=`ls -d mysql*`
+cd $mysql_dir
+cmake . -DCMAKE_INSTALL_PREFIX=/app/mysql5 -DMYSQL_DATADIR=/app/mysql5/data -DWITH_BOOST=/app/software/${mysql_dir}/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
 
 if [ $? -ne 0 ]  ;  then
      {
@@ -164,9 +165,9 @@ install_apache(){
 # build and install apache (2.4.23)
 #install dependencies
 # download package apr and apr-util from apache.org
-cd /app/software/package
-tar --transform s/apr-util-1.5.4/apr-util/ -C ../httpd-2.4.23/srclib/ -zxf apr-util-1.5.4.tar.gz
-tar --transform s/apr-1.5.2/apr/ -C ../httpd-2.4.23/srclib/ -zxf apr-1.5.2.tar.gz
+cd /app/software/package/lamp-common
+tar --transform s/apr-util-1.5.4/apr-util/ -C /app/software/httpd-2.4.23/srclib/ -zxf apr-util-1.5.4.tar.gz
+tar --transform s/apr-1.5.2/apr/ -C /app/software/httpd-2.4.23/srclib/ -zxf apr-1.5.2.tar.gz
 
 
 #configure and install apache
@@ -270,6 +271,9 @@ case $1 in
         ;;
     php)
         install_php
+        ;;
+    prepare)
+        prepare_install
         ;;
     *)
         echo "usage :: lamp | mysql | apache | php \n " 
