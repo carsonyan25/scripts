@@ -9,15 +9,16 @@ passfile=/root/shell/backup_server.pass
 
 backup_and_compress(){ 
 
-	cd /tmp
+	cd /app/backup
 	/app/subversion/bin/svnadmin   dump /app/code/svn/ProjectSource   > ${backup} 
 	pigz  -p 5  ${backup}
 }
 
 sync_to_backup_server(){
 
-cd /tmp
-rsync -avpP --quiet --bwlimit=60000 --password-file=${passfile}  ${backup}  ${dest}
+cd /app/backup
+rsync -avpP --quiet --bwlimit=60000 --password-file=${passfile}  ${backup}.gz  ${dest}
+rm -f ${backup}.gz
 
 }
 
