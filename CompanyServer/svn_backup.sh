@@ -4,22 +4,24 @@
 
 curdate=`date +%Y%m%d`
 backup="cad-svn-${curdate}.dump"
+dest="backup-company@files.pcw365.com::svn_backup"
+passfile=/root/shell/backup_server.pass
 
 backup_and_compress(){ 
 
 	cd /tmp
-
-	/app/subversion/bin/svnadmin   dump /app/code/svn/ProjectSource  -M 512  > ${backup}  2&> /root/shell/log/svn-backup.log
-
+	/app/subversion/bin/svnadmin   dump /app/code/svn/ProjectSource   > ${backup} 
 	pigz  -p 5  ${backup}
 }
 
-#sync_to_backup_server(){
+sync_to_backup_server(){
 
-#cd /tmp
-#rsync -avpP --quiet --bwlimit=60000 --password-file=${passfile}  ${backup}  ${dest}
-#}
+cd /tmp
+rsync -avpP --quiet --bwlimit=60000 --password-file=${passfile}  ${backup}  ${dest}
+
+}
 
 backup_and_compress
+sync_to_backup_server
 
 
