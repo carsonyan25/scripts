@@ -4,7 +4,10 @@
 #this souce lamp contains  apache 2.4.23 , php 5.4.3 and mysql.5.7.13
 # download all source package from official website 
 # all source package place in /app/software/package ,unzip to /app/software
-# all source package  install to /app
+# all source package  install to  install_root
+
+install_root=/home/server
+mkdir  ${install_root}
 
 prepare_install(){
 
@@ -46,13 +49,13 @@ cd $src_dir
 cp -f /usr/share/libtool/config/config.sub .
 cp -f  /usr/share/libtool/config/config.guess .
 cp -f /usr/bin/libtool  .
-./configure --prefix=/app/jpeg  --enable-shared --enable-static  && make 
+./configure --prefix=${install_root}/jpeg  --enable-shared --enable-static  && make 
 
 if [  $?  -eq  0 ] ;  then {
-                    mkdir -p /app/jpeg/bin
-                    mkdir -p /app/jpeg/include
-                    mkdir -p /app/jpeg/lib
-                    mkdir -p /app/jpeg/man/man1
+                    mkdir -p ${install_root}/jpeg/bin
+                    mkdir -p ${install_root}/jpeg/include
+                    mkdir -p ${install_root}/jpeg/lib
+                    mkdir -p ${install_root}/jpeg/man/man1
                     make install 
 }
 fi
@@ -63,7 +66,7 @@ cd /app/software/
 pkg_name="freetype"
 src_dir=`ls -d ${pkg_name}*`
 cd $src_dir
-./configure --prefix=/app/freetype && make && make install
+./configure --prefix=${install_root}/freetype && make && make install
 
 
 #install libxml2
@@ -71,20 +74,20 @@ cd /app/software/
 pkg_name="libxml"
 src_dir=`ls -d ${pkg_name}*`
 cd $src_dir
-./configure   --with-iconv   --prefix=/app/libxml2 && make &&　make install 
+./configure   --with-iconv   --prefix=${install_root}/libxml2 && make &&　make install 
 
 #install pcre
 cd /app/software/
 pkg_name="pcre"
 src_dir=`ls -d ${pkg_name}*`
 cd $src_dir
-./configure    --prefix=/app/pcre &&　make && make install 
+./configure    --prefix=${install_root}/pcre &&　make && make install 
 
 
 # add libs to system path
-echo "/app/jpeg/lib" > /etc/ld.so.conf.d/jpeg.conf
-echo "/app/freetype/lib" > /etc/ld.so.conf.d/freetype.conf
-echo "/app/libxml2/lib" > /etc/ld.so.conf.d/libxml2.conf
+echo "${install_root}/jpeg/lib" > /etc/ld.so.conf.d/jpeg.conf
+echo "${install_root}/freetype/lib" > /etc/ld.so.conf.d/freetype.conf
+echo "${install_root}/libxml2/lib" > /etc/ld.so.conf.d/libxml2.conf
 ldconfig
 
 
@@ -100,7 +103,7 @@ useradd -U -c "MySQL Server user" -M -s /sbin/nologin mysql
 cd /app/software/ 
 mysql_dir=`ls -d mysql*`
 cd $mysql_dir
-cmake . -DCMAKE_INSTALL_PREFIX=/app/mysql5 -DMYSQL_DATADIR=/app/mysql5/data -DWITH_BOOST=/app/software/${mysql_dir}/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
+cmake . -DCMAKE_INSTALL_PREFIX=${install_root}/mysql5 -DMYSQL_DATADIR=${install_root}/mysql5/data -DWITH_BOOST=/app/software/${mysql_dir}/boost -DSYSCONFDIR=/etc -DENABLE_GPROF=1 -DWITH_EXTRA_CHARSETS=all -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DWITH_LIBEVENT=bundled   -DWITH_INNODB_MEMCACHED=1  
 
 if [ $? -ne 0 ]  ;  then
      {
@@ -136,22 +139,22 @@ fi
 # mysql Post Installation Procedures
 #Adding MySQL Server executables to system PATH
 # Create a file mysql.sh in /etc/profile.d/ directory with the below content.
-echo "if ! echo \${PATH} | /bin/grep -q /app/mysql5/bin ; then" > /etc/profile.d/mysql.sh
-echo "PATH=\${PATH}:/app/mysql5/bin" >> /etc/profile.d/mysql.sh
+echo "if ! echo \${PATH} | /bin/grep -q ${install_root}/mysql5/bin ; then" > /etc/profile.d/mysql.sh
+echo "PATH=\${PATH}:${install_root}/mysql5/bin" >> /etc/profile.d/mysql.sh
 echo "export PATH" >> /etc/profile.d/mysql.sh
 echo "fi"  >> /etc/profile.d/mysql.sh
 source /etc/profile.d/mysql.sh
 
 #Adding MySQL Server libraries to the shared library cache
-echo "/app/mysql5/lib" > /etc/ld.so.conf.d/mysql.conf
+echo "${install_root}/mysql5/lib" > /etc/ld.so.conf.d/mysql.conf
 ldconfig
 
 #Adding MySQL to service
-mkdir /app/mysql5/data
-chown -R mysql:mysql  /app/mysql5
-cp /app/mysql5/support-files/mysql.server  /etc/init.d/mysqld
-sed -i s:basedir=\s*$:basedir=/app/mysql5:g    /etc/init.d/mysqld
-sed -i s:datadir=\s*$:datadir=/app/mysql5/data:g    /etc/init.d/mysqld
+mkdir ${install_root}/mysql5/data
+chown -R mysql:mysql  ${install_root}/mysql5
+cp ${install_root}/mysql5/support-files/mysql.server  /etc/init.d/mysqld
+sed -i s:basedir=\s*$:basedir=${install_root}/mysql5:g    /etc/init.d/mysqld
+sed -i s:datadir=\s*$:datadir=${install_root}/mysql5/data:g    /etc/init.d/mysqld
 chkconfig --add mysqld
 chkconfig mysqld on
 
@@ -172,7 +175,7 @@ tar --transform s/apr-1.5.2/apr/ -C /app/software/httpd-2.4.23/srclib/ -zxf apr-
 
 #configure and install apache
 cd /app/software/httpd-2.4.23
-./configure --prefix=/app/apache2 --sysconfdir=/app/apache2/conf --disable-userdir --with-mpm=worker --enable-mods-shared=most --enable-modules=most --enable-v4-mapped --with-included-apr --enable-so --enable-deflate=shared --enable-expires=shared --enable-rewrite=shared --enable-static-support --with-ssl=/usr  --with-libdir=/usr/lib64 --enable-option-checking 
+./configure --prefix=${install_root}/apache2 --sysconfdir=${install_root}/apache2/conf --disable-userdir --with-mpm=worker --enable-mods-shared=most --enable-modules=most --enable-v4-mapped --with-included-apr --enable-so --enable-deflate=shared --enable-expires=shared --enable-rewrite=shared --enable-static-support --with-ssl=/usr  --with-libdir=/usr/lib64 --enable-option-checking 
 
 if  [ $? -ne 0 ]  ;  then 
      {
@@ -198,11 +201,11 @@ fi
 useradd -M -r -U -s /sbin/nologin apache
 
 #create apache.sh in /etc/profile.d/, content like below:
-echo "if ! echo \${PATH} | /bin/grep -q /app/apache2/bin ; then" > /etc/profile.d/apache.sh
-echo "PATH=\${PATH}:/app/apache2/bin" >>  /etc/profile.d/apache.sh
+echo "if ! echo \${PATH} | /bin/grep -q ${install_root}/apache2/bin ; then" > /etc/profile.d/apache.sh
+echo "PATH=\${PATH}:${install_root}/apache2/bin" >>  /etc/profile.d/apache.sh
 echo "fi" >> /etc/profile.d/apache.sh
 source /etc/profile.d/apache.sh
-chown -R apache:apache  /app/apache2/htdocs
+chown -R apache:apache  ${install_root}/apache2/htdocs
 return 0
 }
 
@@ -215,7 +218,7 @@ install_php(){
 
 
 cd /app/software/php-5.4.3/
-./configure --prefix=/app/php5.4.3 --with-config-file-path=/app/php5.4.3/etc --cache-file=./config.cache --with-zlib --with-libdir=lib64 --with-openssl=/usr --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-apxs2=/app/apache2/bin/apxs --with-libxml-dir=/app/libxml2 --with-jpeg-dir=/app/jpeg --with-freetype-dir=/app/freetype --with-gd --with-curl --with-mcrypt --enable-zip  --enable-xml --enable-mbstring --enable-sockets --enable-bcmath --enable-xmlwriter --enable-xmlreader --enable-fpm  --enable-maintainer-zts  --enable-option-checking
+./configure --prefix=${install_root}/php5.4.3 --with-config-file-path=${install_root}/php5.4.3/etc --cache-file=./config.cache --with-zlib --with-libdir=lib64 --with-openssl=/usr --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-apxs2=${install_root}/apache2/bin/apxs --with-libxml-dir=${install_root}/libxml2 --with-jpeg-dir=${install_root}/jpeg --with-freetype-dir=${install_root}/freetype --with-gd --with-curl --with-mcrypt --enable-zip  --enable-xml --enable-mbstring --enable-sockets --enable-bcmath --enable-xmlwriter --enable-xmlreader --enable-fpm  --enable-maintainer-zts  --enable-option-checking
 
 if  [ $? -ne 0 ]  ;  then 
      {
@@ -248,7 +251,7 @@ install_lamp(){
     install_php
     if [ $? -eq 0 ] ; then 
         echo "install LAMP successfully! \n" 
-        echo "source package LAMP(apache-2.4.23 ,mysql-boost-5.6.33 and php-5.4.3) has been installed to /app \n"
+        echo "source package LAMP(apache-2.4.23 ,mysql-boost-5.6.33 and php-5.4.3) has been installed to ${install_root} \n"
 		echo "you need to initialize mysql manully ! \n"
     else 
         echo "install lamp error"
