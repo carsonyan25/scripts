@@ -50,8 +50,8 @@ db_other_full_backup(){
 	#delete aec database backup 2 days ago
 	find $SRC_DB_AEC -name "cad-aec-big-table-*"  -type f -mtime +$OTHER_KEEP  -exec rm -f '{}'  \;
 #		# table which size more than 1GB in database aec
-	aec_big_table=(usercount_1_150824 usercount_1_170118 usercount_1_160926 usercount_1 usercount_1_device usercount usercount_last)
-	exclude_table=(aec.usercount_1_150824 aec.usercount_1_170118  aec.usercount_1_160926  aec.usercount_1  aec.usercount_1_device aec.usercount aec.usercount_last)
+	aec_big_table=(usercount_1_150824 usercount_1_170118 usercount_1_160926 usercount_1_170331  usercount_1 usercount_1_device usercount usercount_last)
+	exclude_table=(aec.usercount_1_150824 aec.usercount_1_170118 aec.usercount_1_170331  aec.usercount_1_160926  aec.usercount_1  aec.usercount_1_device aec.usercount aec.usercount_last)
 	ignore_big_table=""
 	for table in ${exclude_table[*]} ;
 		do
