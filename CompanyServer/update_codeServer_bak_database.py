@@ -20,7 +20,7 @@ pcw_db=['pc','pcwcms','pcwb2bs','b2bsite','ecshop','budget','minimarket','minicm
 pcw_bak_db=['pc_bak','pcwcms_bak','pcwb2bs_bak','b2bsite_bak','ecshop_bak','budget_bak','minimarket_bak','minicmf_bak']
 
 
-# this class is copy database backup and unzip them to /tmp
+# this class is copy database backup and unzip them to /tmp,then rename db name in sql file
 class prehandle:
 
         def __init__(self):
@@ -51,7 +51,7 @@ class prehandle:
 
 		
 		# modify database name in sql file
-		def amend_database_name(self):
+		def amend_db_name(self):
 
 			for db in cad_db :
 				for db_bak in cad_bak_db :
@@ -105,7 +105,7 @@ if __name__ == '__main__' :
 	job=prehandle()
 	job.copy_file()
 	job.unzip_file()
-	job.amend_database_name()
+	job.amend_db_name()
 
 	#create multi threads
 	thread1 = MultiThread(1,"Thread-1",cad_file,cad_bak_db)
