@@ -5,7 +5,7 @@
 
 mysql_bin=/home/server/mysql5/bin
 db_backup=/home/stats_db_backup/stats
-curdate=`date +%Y%m%d`
+curtime=`date +%Y%m%d-%H%M`
 dest=stats@tower.pcw365.com::stats_data
 pass=/root/shell/stats.pass
 speed=20000
@@ -16,19 +16,19 @@ create_backup(){
 
 	cd $db_backup
 	# backup table form usercount_last and user_stat
-	${mysql_bin}/mysqldump  -uroot -pSO/ljb1PWa14lHqF  -d stats usercount_last user_stats > stats-usercount_last_and_user_stat-${curdate}.form
+	${mysql_bin}/mysqldump  -uroot -pSO/ljb1PWa14lHqF  -d stats usercount_last user_stat > stats-table-${curtime}.form
 	# backup table  usercount_last data
-	${mysql_bin}/mysql  -uroot -pSO/ljb1PWa14lHqF  -e "use stats; select *  into outfile '$db_backup/stats.usercount_last-${curdate}.data' from usercount_last fields terminated by ','; "
+	${mysql_bin}/mysql  -uroot -pSO/ljb1PWa14lHqF  -e "use stats; select *  into outfile '$db_backup/stats.usercount_last-${curtime}.data' fields terminated by ',' from usercount_last "
 	# backup table user_stat data
-	${mysql_bin}/mysql  -uroot -pSO/ljb1PWa14lHqF  -e "use stats; select *  into outfile '$db_backup/stats.user_stat-${curdate}.data' from user_stat fields terminated by ','; "
+	${mysql_bin}/mysql  -uroot -pSO/ljb1PWa14lHqF  -e "use stats; select *  into outfile '$db_backup/stats.user_stat-${curtime}.data' fields terminated by ',' from user_stat "
 
 }
 
 compress_sync(){
 	
 	cd /home/stats_db_backup
-	tar -czf stats_db_backup-${curdate}.tar.gz  stats
-	rsync -avpP  --quiet --bwlimit=$speed  --password-file=$pass stats_db_backup-${curdate}.tar.gz  $dest  
+	tar -czf stats_db_backup-${curtime}.tar.gz  stats
+	rsync -avpP  --quiet --bwlimit=$speed  --password-file=$pass stats_db_backup-${curtime}.tar.gz  $dest  
 
 }
 
