@@ -4,7 +4,7 @@
 
 import commands
 import pycurl
-
+import sys
 
 # curl url to generate statistics
 class API:
@@ -22,8 +22,8 @@ class API:
 
 if __name__ == '__main__':
 	
-	opt=API()
-	opt.stats()
-
-else:
-	pass
+	if sys.argv[1] == 'stats' :
+		opt=API()
+		opt.stats()
+	else:
+		pass
