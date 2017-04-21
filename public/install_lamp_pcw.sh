@@ -315,17 +315,14 @@ install_lamp(){
     install_mysql
     install_apache
     install_php
-    if [ $? -eq 0 ] ; then 
-        echo "install LAMP successfully! \n" 
-        echo "source package LAMP(apache-2.2.25 ,mysql-5.1.73 and php-5.4.3) has been installed to /home/server \n"
-		echo "you need to initialize mysql manully ! \n"
-    else 
-        echo "install lamp error"
-
-    fi
-
+	mentions
 }
 
+mentions()
+{
+	echo "source package LAMP(apache-2.2.25 ,mysql-5.1.73 and php-5.4.3) has been installed to /home/server "
+	echo "you need to initialize mysql manully ! \n"
+}
 
 case $1 in 
 
@@ -341,7 +338,13 @@ case $1 in
     php)
         install_php
         ;;
+    prepare)
+       prepare_install
+       ;;
+	mention)
+		mentions
+		;;
     *)
-        echo "usage :: lamp | mysql | apache | php \n " 
+        echo "usage :: lamp | mysql | apache | php | mention \n " 
         ;;
 esac

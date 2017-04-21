@@ -6,8 +6,8 @@
 # all source package place in /app/software/package ,unzip to /app/software
 # all source package  install to  install_root
 
-install_root=/home/server
-mkdir  ${install_root}
+install_root=$2
+mkdir -p  ${install_root}
 
 prepare_install(){
 
@@ -249,17 +249,14 @@ install_lamp(){
     install_mysql
     install_apache
     install_php
-    if [ $? -eq 0 ] ; then 
-        echo "install LAMP successfully! \n" 
-        echo "source package LAMP(apache-2.4.23 ,mysql-boost-5.6.33 and php-5.4.3) has been installed to ${install_root} \n"
-		echo "you need to initialize mysql manully ! \n"
-    else 
-        echo "install lamp error"
-
-    fi
-
+	mentions
 }
 
+mentions()
+{
+	echo 'source package LAMP(apache-2.4.23 ,mysql-boost-5.7.13 and php-5.4.3) has been installed to ${install_root}' 
+	echo "you need to initialize mysql manully ! "
+}	
 
 case $1 in 
 
@@ -278,8 +275,11 @@ case $1 in
     prepare)
         prepare_install
         ;;
+	mention)
+		mentions
+		;;
     *)
-        echo "usage :: lamp | mysql | apache | php \n " 
+        echo "usage :: lamp | mysql | apache | php | mention \n " 
         ;;
 esac
 

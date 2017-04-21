@@ -11,4 +11,3 @@ cd $apache_log_dir
 find ./ -name "20*log"  -mtime  +${expired}   -exec rm -f '{}' \;
 
 
-
