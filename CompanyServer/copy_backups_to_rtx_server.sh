@@ -12,7 +12,7 @@ SVN_BACKUP_DIR=/backup/svn_backup
 
 # RTX_DIR is locate in rtx.pcw365.com(f:\rtx_share\All_Backup) 
 RTX_DIR=/rtx_share/All_Backup
-speed=50000
+speed=80000
 
 #delete old backup file in RTX_DIR
 rm -f  $RTX_DIR/*.* 
