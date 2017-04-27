@@ -100,8 +100,10 @@ class MultiThread (threading.Thread):   #inherited from threading.Thread ,overwr
 		log=open("/root/shell/update_codeServer_database.log","a")
 		log.write("{CURTIME} {FILENAME} has been loaded \n ".format(CURTIME=curtime,FILENAME=FILE))
 		log.close()
-#		delfile=DelFile(FILE)
-#		delfile.delete_file()
+		content=commands.getoutput("tail /root/shell/update_codeServer_database.log")
+		print(content)
+		delfile=DelFile(FILE)
+		delfile.delete_file()
 
 	def run(self):  # call import_db method                
 		self.import_db(self.FILE,self.DB)
