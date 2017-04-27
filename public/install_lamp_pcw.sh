@@ -9,6 +9,7 @@
 
 prepare_install(){
 
+mkdir -p /home/server
 lamp_result=""
 #check if its apache ,mysql,php running 
 lamp_result= `ps aux | grep -E 'httpd|php|mysql'`
