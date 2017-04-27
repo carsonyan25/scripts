@@ -9,7 +9,7 @@ curtime=`date +%Y%m%d-%H%M`
 dest=stats@tower.pcw365.com::stats_data
 pass=/root/shell/stats.pass
 speed=20000
-expire=6
+expire=4
 
 	
 create_backup(){

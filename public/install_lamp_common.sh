@@ -24,7 +24,7 @@ if $lamp_result != "" ;  then
 fi
 
 # remove all  package about apache(httpd),mysql,php install from yum
-rpm -qa | grep -i -E "apache|httpd|mysql|php" | xargs yum remove   -y
+rpm -qa | grep -i -E "apache|httpd|mysql|php|httpd-tools" | xargs yum remove   -y
 
 # begin lamp install
 

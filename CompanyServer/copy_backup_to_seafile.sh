@@ -7,7 +7,6 @@
 PCW_DB_DIR=/backup/www_pcw365_com/databases/fullbackup
 CAD_DB_DIR=/backup/cad_pcw365_com/database/fullbackup
 MOBILE_DB_DIR=/backup/m_pcw365_com/database/
-STATS_DIR=/backup/code_pcw365_com/
 ALIYUNTEST_DIR=/backup/aliyun_test/gitlab_data_backup/
 SEAFILE_DIR=/backup/backup_to_seafile
 curdate=`date +%Y%m%d`
@@ -18,8 +17,6 @@ find ${PCW_DB_DIR} -name "*.gz" -mtime 0 -exec  cp '{}' ${SEAFILE_DIR} \;
 find ${CAD_DB_DIR} -name "*.gz" -mtime 0 -exec  cp '{}' ${SEAFILE_DIR} \;
 find ${MOBILE_DB_DIR} -name "*.gz" -mtime 0 -exec cp '{}'  ${SEAFILE_DIR} \;
 find ${ALIYUNTEST_DIR} -name "*.tar*" -mtime 0 -exec cp '{}'  ${SEAFILE_DIR} \;
-cd $STATS_DIR 
-ls stats*.tar.gz --sort=time | head -n 1 | xargs -i  cp {}  ${SEAFILE_DIR} 
 
 
 

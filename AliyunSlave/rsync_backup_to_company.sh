@@ -4,21 +4,27 @@
 PCW_WEB_DIR=/backup/www_pcw365_backup/webfiles
 PCW_DB_DIR=/backup/www_pcw365_backup/databases
 CAD_DB_DIR=/backup/cad_pcw365_backup/database
+STATS_DB_DIR=/backup/stats.pcw365.com_backup
 MOBILE_DB_DIR=/backup/m_pcw365_backup/database
-WEB_EXPIRE=5			#pcw web backups keep days
-FULL_DB_EXPIRE=7		#full db backups keep days
-DIFFERENT_DB_EXPIRE=7		#db different backups keep days
+USA_DB_DIR=/backup/usa.pcw365.com_backup
+WEB_EXPIRE=3			#pcw web backups keep days
+FULL_DB_EXPIRE=4		#full db backups keep days
+DIFFERENT_DB_EXPIRE=3		#db different backups keep days
 PCW_WEB_LOGFILE=/root/shell/logs/pcw_web.log
 PCW_DB_LOGFILE=/root/shell/logs/pcw_db.log
 CAD_DB_LOGFILE=/root/shell/logs/cad_db.log
-MOBILE_DB_LOGFILE=/root/shell/logs/MOBILE_DB.log
+MOBILE_DB_LOGFILE=/root/shell/logs/mobile_db.log
+STATS_DB_LOGFILE=/root/shell/logs/stats_db.log
+STATS_DB_LOGFILE=/root/shell/logs/usa_db.log
 PASS=/backup/passfile/backup2company.pass
 USER=backup-company
 COMPANY_SERVER=27.115.112.238
 PCW_DST=backup-pcw
 CAD_DST=backup-cad
 MOBILE_DST=backup-mobile
-SPEED=5000
+STATS_DST=backup-stats
+USA_DST=backup-usa
+SPEED=8000
 
 
 sync_pcw_web(){
@@ -62,11 +68,31 @@ sync_mobile_db()
 	{
 	
 	echo "$$" > /root/shell/pid/sync_mobile_pid
-	find ${MOBILE_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f {} \;
-	curtime=`date +%Y%m%d-%H%m`
-	cd ${MOBILE_DB_DIR} 
+	find ${MOBILE_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f '{}'  \;
+	cd ${MOBILE_DB_DIR}
+	 curtime=`date  +%Y%m%d-%H%M `
 	tar -zcf mongodb-${curtime}.tar.gz  ../mongodb
 	rsync -avpP --quiet --bwlimit=${SPEED} --log-file=$MOBILE_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $MOBILE_DB_DIR  $USER@$COMPANY_SERVER::$MOBILE_DST
+}
+
+
+sync_stats_db()
+	{
+	
+	echo "$$" > /root/shell/pid/sync_stats_pid
+	find ${STATS_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f '{}' \;
+	cd ${STATS_DB_DIR} 
+	rsync -avpP --quiet --bwlimit=${SPEED} --log-file=$STATS_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $STATS_DB_DIR  $USER@$COMPANY_SERVER::$STATS_DST
+}
+
+
+sync_usa_db()
+	{
+	
+	echo "$$" > /root/shell/pid/sync_usa_pid
+	find ${USA_DB_DIR} -name "*.gz" -mtime +${FULL_DB_EXPIRE} -exec rm -f '{}' \;
+	cd ${USA_DB_DIR} 
+	rsync -avpP --quiet --bwlimit=${SPEED} --log-file=$USA_DB_LOGFILE --password-file=${PASS}  --include=*.gz  $USA_DB_DIR  $USER@$COMPANY_SERVER::$USA_DST
 }
 
 compress_pcw_web_files(){
@@ -151,6 +177,30 @@ case $1 in
                 esac
         ;;
 
+
+	 "stats")
+
+                case $2 in
+                        "db")
+                                sync_stats_db
+                                ;;
+                        *)
+                                echo "second parameter should be db"
+                                ;;
+                esac
+        ;;
+	
+	 "usa")
+
+                case $2 in
+                        "db")
+                                sync_usa_db
+                                ;;
+                        *)
+                                echo "second parameter should be db"
+                                ;;
+                esac
+        ;;
 
 	"stop")
 		para_2=$2; para_3=$3;  

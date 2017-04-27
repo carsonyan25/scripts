@@ -27,7 +27,8 @@ db_full_backup()
 		local	CUR_DATE=`date +%Y%m%d`
 		#delete db full backup files before 21days  
 		find $SRC_DB_FULL -name "pcw-ecshop-*" -type f -mtime +$FULL_KEEP -exec rm -f '{}' \;
-		mysqldump  -uroot -paecsqlyou  --master-data=2 --flush-logs -x --add-drop-database --databases pcbcmf budget ecshop pcwcms pc pcwb2bs b2bsite minicmf minimarket > ${SRC_DB_FULL}/pcw-ecshop-${CUR_DATE}.sql
+		db=`/home/server/mysql5/bin/mysql -uroot -paecsqlyou  -e "show databases;" | grep -ivE 'information_schema|mysql|Database|ecshop_mobile_test|performace_schema'`
+		/home/server/mysql5/bin/mysqldump  -uroot -paecsqlyou  --master-data=2 --flush-logs -x --add-drop-database --databases ${db} > ${SRC_DB_FULL}/pcw-ecshop-${CUR_DATE}.sql
 		db_full_sync  # call function  ,send full db to aliyun slave
 	}
 

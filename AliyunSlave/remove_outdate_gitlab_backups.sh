@@ -3,7 +3,7 @@
 # remove outdate gitlab backups on aliyun slave server
 
 gitlab_backup_dir=/backup/aliyuntest_backup
-keepdays=5
+keepdays=4
 
 remove_backups(){
 	cd $gitlab_backup_dir

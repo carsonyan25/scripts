@@ -11,7 +11,7 @@ import pycurl
 TIMEFMT="%Y%m%d"
 curdate=time.strftime(TIMEFMT,time.localtime())
 aec_file="cad-aec-big-table-{DATE}.tar.gz".format(DATE=curdate)
-dest_file="usercount_1_170118-{DATE}.data".format(DATE=curdate)
+dest_file="usercount_1_170331-{DATE}.data".format(DATE=curdate)
 
 #a method that copy new cad-aec-big-table backup from backup server to code server
 def copy_file():
@@ -21,7 +21,7 @@ def copy_file():
 
 # uncompress backup file to /tmp 
 def uncompress():
-        commands.getoutput("cd /tmp && tar -xf {SRC}".format(SRC=aec_file))
+        commands.getoutput("cd /tmp && tar --transform s/aec_big_table// -xf {SRC} aec_big_table/{DEST} ".format(SRC=aec_file,DEST=dest_file))
 
 # import backup data to code server's database
 def import_stats(curfile,table):
@@ -63,7 +63,7 @@ class generate_stats:
 if __name__ == '__main__':
 	copy_file()
 	uncompress()
-	import_stats(curfile="/tmp/" + dest_file,table="usercount_1_170118")
+	import_stats(curfile="/tmp/" + dest_file,table="usercount_1_170331")
 	remove_file()
 	stats=generate_stats()
 	stats.increment()

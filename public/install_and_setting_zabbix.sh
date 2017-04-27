@@ -40,6 +40,7 @@ post_install()
 	tar -xf ${config_pkg} 
 	mkdir -p /var/lib/zabbix
 	mv .my.cnf  /var/lib/zabbix/.my.cnf
+	mv partition_low_discovery.sh  /app/zabbix_agentd/bin/
 	rm -f  ${config_pkg}
 	if [ $? == 0 ] ; then 
 		echo "post installation is ok"
